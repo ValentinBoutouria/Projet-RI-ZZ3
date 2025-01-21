@@ -109,3 +109,18 @@ public class EventParamVector2 : EventParam
     public Vector2 Value { get => value; set => this.value = value; }
     public float Speed { get => speed; set => speed = value; }
 }
+public class EventSpawnPneu : EventParam
+{
+    private GameObject _pneu;
+    private GameObject _parentPneu;
+
+
+    public EventSpawnPneu(GameObject Pneu, GameObject ParentPneu)
+    {
+        this._pneu = Pneu;
+        this._parentPneu = ParentPneu;
+    }
+
+    public GameObject Pneu { get => _pneu; set => _pneu = value; }
+    public GameObject ParentPneu { get => _parentPneu; set => _parentPneu = value; }
+}

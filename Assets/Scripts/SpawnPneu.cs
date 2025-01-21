@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class SpawnPneu : MonoBehaviour
 {
-    [SerializeField] Animator animator;
+    [SerializeField] private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         animator = GameObject.Find("RobotD").GetComponent<Animator>();
+        EventManager.StartListening("SpawnPneu", SpawnPneuFunc);
     }
 
     // Update is called once per frame
@@ -18,9 +19,14 @@ public class SpawnPneu : MonoBehaviour
     {
         
     }
-    public void SpawnPneuFunc()
+    public void SpawnPneuFunc(EventParam e)
     {
-        Debug.Log("test");
         animator.SetTrigger("ButtonPressed");
+        EventManager.TriggerEvent("BoutonVertTriggered");
+        EventSpawnPneu _eventSpawnPneu=(EventSpawnPneu)e;
+        for (int i = 0; i < 10; i++)
+        {
+            _eventSpawnPneu.ParentPneu= Instantiate(_eventSpawnPneu.Pneu);
+        }
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using TMPro;
 public class InputController : MonoBehaviour
 {
     [SerializeField] private GameObject _objectToggle;
@@ -11,11 +11,17 @@ public class InputController : MonoBehaviour
     [SerializeField] private Vector2 _previousValuePrimaryAxis;
     [SerializeField] private Vector2 _currentValuePrimaryAxis;
     [SerializeField] private float _speed; 
+    [SerializeField] private float chronos;
+    [SerializeField] private TextMeshProUGUI _textChronos;
+    [SerializeField] private GameObject _canvasOverlay;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        chronos = 0;
+        EventManager.StartListening("BoutonVertTriggered", ActiveCanvas);
+        EventManager.StartListening("BoutonRougeTriggered", DesactiveCanvas);
     }
 
     // Update is called once per frame
@@ -23,6 +29,11 @@ public class InputController : MonoBehaviour
     {
         ValueUpdatePrimaryAxis();
         RecupInputs();
+        if(_canvasOverlay.activeSelf)
+        {
+            UpdateChronos();
+
+        }
 
 
     }
@@ -59,7 +70,18 @@ public class InputController : MonoBehaviour
         {
             _objectToggle.SetActive(!_objectToggle.activeSelf);
         }
-
-
+    }
+    void ActiveCanvas(EventParam e)
+    {
+        _canvasOverlay.SetActive(true);
+    }
+    void DesactiveCanvas(EventParam e)
+    {
+        _canvasOverlay.SetActive(false);
+    }
+    void UpdateChronos()
+    {
+        chronos += Time.deltaTime;
+        _textChronos.text="Temps : "+chronos;
     }
 }
