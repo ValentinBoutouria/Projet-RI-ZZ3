@@ -38,6 +38,8 @@ public class SpawnController : MonoBehaviour
     void PneuCorrect(EventParam e)
     {
         _textPneuDetection.text = "Pneu Conforme";
+        Debug.Log("AHHHHHHHHHHHHH");
+
 
     }
     void PneuIncorrect(EventParam e)
