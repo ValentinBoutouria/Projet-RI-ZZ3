@@ -30,7 +30,7 @@ public class RayCastScanner : MonoBehaviour
         // Tracer un rayon pour le débogage
         Debug.DrawRay(origin, direction * rayLength, Color.green);
 
-            Debug.Log("test2");
+         
         // Effectuer le Raycast
         if (Physics.Raycast(origin, direction, out RaycastHit hit, rayLength))
         {
@@ -39,7 +39,7 @@ public class RayCastScanner : MonoBehaviour
             if(hitCarac._pneuCorrect)
             {
                 EventManager.TriggerEvent("PneuCorrect");
-                Debug.Log("PneuCorddre");
+
 
             }
             else

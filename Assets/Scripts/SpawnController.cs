@@ -7,9 +7,13 @@ public class SpawnController : MonoBehaviour
 {
     [SerializeField] private GameObject _prefabPneu;
     [SerializeField] private GameObject _parentPneu;
+    [SerializeField] private GameObject _chemin;
+    [SerializeField] private GameObject _endChemin;
     [SerializeField] private TextMeshProUGUI _textPneuDetection;
     [SerializeField] private TextMeshProUGUI _textPneuBenne;
+    [SerializeField] private TextMeshProUGUI _textScoreChemin;
     [SerializeField] private int _pneuRestant; 
+    [SerializeField] private float _scoreChemin;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,8 +27,13 @@ public class SpawnController : MonoBehaviour
         EventManager.StartListening("PneuExitBenne", PneuExitBenne);
         EventManager.StartListening("PneuBonnePlace", PneuBonnePlace);
 
+        EventManager.StartListening("StartChemin", StartChemin);
+        EventManager.StartListening("UpdateScoreValue", UpdateScoreValue);
+        EventManager.StartListening("EndChemin", EndChemin);
+
 
     }
+    
 
     // Update is called once per frame
     void Update()
@@ -38,8 +47,7 @@ public class SpawnController : MonoBehaviour
     void PneuCorrect(EventParam e)
     {
         _textPneuDetection.text = "Pneu Conforme";
-        Debug.Log("AHHHHHHHHHHHHH");
-
+      
 
     }
     void PneuIncorrect(EventParam e)
@@ -69,5 +77,20 @@ public class SpawnController : MonoBehaviour
     {
         _textPneuBenne.text = "Pneu Restant : " + _pneuRestant + "/10";
     }
+    void StartChemin(EventParam e)
+    {
+        _chemin.SetActive(true);
+        _endChemin.SetActive(true);
 
+    }
+    void UpdateScoreValue(EventParam e)
+    {
+        _textScoreChemin.text = "Score Actuel : " + (int)_scoreChemin;
+    }
+    void EndChemin(EventParam e)
+    {
+        _chemin.SetActive(false);
+        _endChemin.SetActive(false);
+        //save dans un json la variable score 
+    }
 }

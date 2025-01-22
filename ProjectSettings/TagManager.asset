@@ -3,7 +3,18 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - XRMandatory
+  - XRRig
+  - Lampe
+  - Aiguillage
+  - Neon
+  - Emissive
+  - Light1
+  - Pneu
+  - Chemin
+  - Start
+  - End
   layers:
   - Default
   - TransparentFX
