@@ -30,6 +30,7 @@ public class SpawnController : MonoBehaviour
         EventManager.StartListening("StartChemin", StartChemin);
         EventManager.StartListening("UpdateScoreValue", UpdateScoreValue);
         EventManager.StartListening("EndChemin", EndChemin);
+        EventManager.StartListening("FinGamePneu", FinGamePneu);
 
 
     }
@@ -38,7 +39,24 @@ public class SpawnController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (_pneuRestant == 0)
+        {
+            EventManager.TriggerEvent("FinGamePneu");
+        }
+    }
+    void FinGamePneu(EventParam e)
+    {
+        //affichage clavier + recupération du score et envoie dans le json + update le panel avec les données du json
+
+    }
+    public void DestroyPneu()
+    {
+       
+        int _numberchild=_parentPneu.transform.childCount;
+        for (int i = 0; i < _numberchild; i++)
+        {
+            Destroy(_parentPneu.transform.GetChild(i).gameObject);
+        }
     }
     public void SpawnPneu()
     {
