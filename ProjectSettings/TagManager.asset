@@ -15,6 +15,7 @@ TagManager:
   - Chemin
   - Start
   - End
+  - GrabGrue
   layers:
   - Default
   - TransparentFX
