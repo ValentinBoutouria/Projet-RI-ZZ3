@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
+//using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 public class SpawnController : MonoBehaviour
 {
@@ -9,10 +12,13 @@ public class SpawnController : MonoBehaviour
     [SerializeField] private GameObject _parentPneu;
     [SerializeField] private GameObject _chemin;
     [SerializeField] private GameObject _endChemin;
+    [SerializeField] private GameObject _endGame;
+    [SerializeField] private GameObject _midGame;
     [SerializeField] private TextMeshProUGUI _textPneuDetection;
     [SerializeField] private TextMeshProUGUI _textPneuBenne;
     [SerializeField] private TextMeshProUGUI _textScoreCheminActuel;
     [SerializeField] private TextMeshProUGUI _textScoreCheminHighScore;
+    [SerializeField] private Button _restartButton;
     [SerializeField] private int _pneuRestant; 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +26,7 @@ public class SpawnController : MonoBehaviour
         _pneuRestant = 10;
         UpdateTextBenne();
         _textPneuDetection.text = "Waiting";
+        _restartButton.onClick.AddListener(NewGamePneu);
         EventManager.StartListening("PneuCorrect", PneuCorrect);
         EventManager.StartListening("PneuIncorrect", PneuIncorrect);
         EventManager.StartListening("PneuIllisible", PneuIllisible);
@@ -31,6 +38,8 @@ public class SpawnController : MonoBehaviour
         EventManager.StartListening("EndChemin", EndChemin);
         EventManager.StartListening("FinGamePneu", FinGamePneu);
         EventManager.StartListening("LoadData", UpdateTextHighScores);
+        EventManager.StartListening("UserNameValide", UpdateUserPneu);
+        EventManager.StartListening("UpdateChronos", UpdateChronosPneu);
 
 
     }
@@ -46,8 +55,16 @@ public class SpawnController : MonoBehaviour
     }
     void FinGamePneu(EventParam e)
     {
+        _midGame.SetActive(false);
+        _endGame.SetActive(true);
+
         //affichage clavier + recupération du score et envoie dans le json + update le panel avec les données du json
 
+    }
+    void NewGamePneu()
+    {
+        _midGame.SetActive(true);
+        _endGame.SetActive(false);
     }
     public void DestroyPneu()
     {
@@ -117,7 +134,15 @@ public class SpawnController : MonoBehaviour
     void UpdateTextHighScores(EventParam e)
     {
         EventScoreGrueLoad _eventScoreGrueLoad = (EventScoreGrueLoad)e;
-        _textScoreCheminHighScore.text = "User : " + (int)_eventScoreGrueLoad.Score;
+        _textScoreCheminHighScore.text = _eventScoreGrueLoad.User +" : " + (int)_eventScoreGrueLoad.Score;
         
+    }
+    void UpdateUserPneu(EventParam e)
+    {
+        //on change le json 
+    }
+    void UpdateChronosPneu(EventParam e)
+    {
+        //on change le json
     }
 }

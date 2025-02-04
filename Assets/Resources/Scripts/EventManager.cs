@@ -154,15 +154,39 @@ public class EventScoreGrueSave : EventParam
 }
 public class EventScoreGrueLoad : EventParam
 {
+    private string _user;
     private float _score;
 
 
 
-    public EventScoreGrueLoad(float Score)
+    public EventScoreGrueLoad(string User,float Score)
     {
+        this._user = User;
         this._score = Score;
 
     }
 
     public float Score { get => _score; set => _score = value; }
+    public string User { get => _user; set => _user = value; }
+}
+public class EventUserNameValide : EventParam
+{
+    private string _user;
+   
+    public EventUserNameValide(string User)
+    {
+        this._user = User;
+    }
+    public string User { get => _user; set => _user = value; }
+}
+public class EventEnvoieChronos : EventParam
+{
+    private float _chronos;
+
+    public EventEnvoieChronos(float Chronos)
+    {
+        this._chronos = Chronos;
+    }
+
+    public float Chronos { get => _chronos; set => _chronos = value; }
 }
