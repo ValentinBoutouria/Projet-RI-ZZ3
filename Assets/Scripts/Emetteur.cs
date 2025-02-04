@@ -5,20 +5,25 @@ using UnityEngine;
 public class Emetteur : MonoBehaviour
 {
     [SerializeField] private float score;
-    [SerializeField] private float timer;
+    [SerializeField] private float timer ;
     [SerializeField] private float counter;
+    [SerializeField] private bool _dehorsLigne=false;
     // Start is called before the first frame update
     void Start()
     {
-
-        
+        score = 1000;
+        timer = 1;
+        counter = 0;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        ControlValueScore();
+        if (_dehorsLigne)
+        {
+            ControlValueScore();
+        }
 
 
     }
@@ -30,27 +35,36 @@ public class Emetteur : MonoBehaviour
             score = 1000;
             EventManager.TriggerEvent("StartChemin");
 
-            EventManager.TriggerEvent("UpdateScoreValue");
+            EventManager.TriggerEvent("UpdateScoreValue", new EventScoreGrueUpdate(score));
         }
         if(other.tag=="End")
         {
-            EventManager.TriggerEvent("EndChemin");
+            EventManager.TriggerEvent("EndChemin", new EventScoreGrueUpdate(score));
+            _dehorsLigne = false;
+            
+        }
+        if(other.tag=="Chemin")
+        {
+            _dehorsLigne=false;
+
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if(other.tag=="Chemin")
         {
-            score -= Time.deltaTime;
-            counter += Time.deltaTime;
+            _dehorsLigne = true;
         }
     }
     void ControlValueScore()
     {
-        if(counter > timer) 
+        counter += Time.deltaTime;
+        
+        if (counter > timer) 
         {
-            EventManager.TriggerEvent("UpdateScoreValue");
+            score = score - 1;
             counter = 0;
+            EventManager.TriggerEvent("UpdateScoreValue", new EventScoreGrueUpdate(score));
         }
     }
 

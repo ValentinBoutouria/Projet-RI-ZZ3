@@ -124,3 +124,45 @@ public class EventSpawnPneu : EventParam
     public GameObject Pneu { get => _pneu; set => _pneu = value; }
     public GameObject ParentPneu { get => _parentPneu; set => _parentPneu = value; }
 }
+public class EventScoreGrueUpdate : EventParam
+{
+    private float _score;
+    
+
+
+    public EventScoreGrueUpdate(float Score)
+    {
+        this._score = Score;
+       
+    }
+
+    public float Score { get => _score; set => _score = value; }
+}
+public class EventScoreGrueSave : EventParam
+{
+    private float _score;
+
+
+
+    public EventScoreGrueSave(float Score)
+    {
+        this._score = Score;
+
+    }
+
+    public float Score { get => _score; set => _score = value; }
+}
+public class EventScoreGrueLoad : EventParam
+{
+    private float _score;
+
+
+
+    public EventScoreGrueLoad(float Score)
+    {
+        this._score = Score;
+
+    }
+
+    public float Score { get => _score; set => _score = value; }
+}

@@ -11,9 +11,9 @@ public class SpawnController : MonoBehaviour
     [SerializeField] private GameObject _endChemin;
     [SerializeField] private TextMeshProUGUI _textPneuDetection;
     [SerializeField] private TextMeshProUGUI _textPneuBenne;
-    [SerializeField] private TextMeshProUGUI _textScoreChemin;
+    [SerializeField] private TextMeshProUGUI _textScoreCheminActuel;
+    [SerializeField] private TextMeshProUGUI _textScoreCheminHighScore;
     [SerializeField] private int _pneuRestant; 
-    [SerializeField] private float _scoreChemin;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,11 +26,11 @@ public class SpawnController : MonoBehaviour
         EventManager.StartListening("PneuRetire", PneuRetire);
         EventManager.StartListening("PneuExitBenne", PneuExitBenne);
         EventManager.StartListening("PneuBonnePlace", PneuBonnePlace);
-
         EventManager.StartListening("StartChemin", StartChemin);
         EventManager.StartListening("UpdateScoreValue", UpdateScoreValue);
         EventManager.StartListening("EndChemin", EndChemin);
         EventManager.StartListening("FinGamePneu", FinGamePneu);
+        EventManager.StartListening("LoadData", UpdateTextHighScores);
 
 
     }
@@ -103,12 +103,21 @@ public class SpawnController : MonoBehaviour
     }
     void UpdateScoreValue(EventParam e)
     {
-        _textScoreChemin.text = "Score Actuel : " + (int)_scoreChemin;
+        EventScoreGrueUpdate _eventScoreGrueUpdate = (EventScoreGrueUpdate)e;
+        _textScoreCheminActuel.text = "Score Actuel : " + (int)_eventScoreGrueUpdate.Score;
     }
     void EndChemin(EventParam e)
     {
+        EventScoreGrueUpdate _eventScoreGrueUpdate = (EventScoreGrueUpdate)e;
         _chemin.SetActive(false);
         _endChemin.SetActive(false);
         //save dans un json la variable score 
+        EventManager.TriggerEvent("Savedata",new EventScoreGrueUpdate(_eventScoreGrueUpdate.Score));
+    }
+    void UpdateTextHighScores(EventParam e)
+    {
+        EventScoreGrueLoad _eventScoreGrueLoad = (EventScoreGrueLoad)e;
+        _textScoreCheminHighScore.text = "User : " + (int)_eventScoreGrueLoad.Score;
+        
     }
 }
