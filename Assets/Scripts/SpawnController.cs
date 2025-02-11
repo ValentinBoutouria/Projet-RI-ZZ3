@@ -14,6 +14,8 @@ public class SpawnController : MonoBehaviour
     [SerializeField] private GameObject _endChemin;
     [SerializeField] private GameObject _endGame;
     [SerializeField] private GameObject _midGame;
+    [SerializeField] private GameObject _panelScoreGrue;
+    
     [SerializeField] private TextMeshProUGUI _textPneuDetection;
     [SerializeField] private TextMeshProUGUI _textPneuBenne;
     [SerializeField] private TextMeshProUGUI _textScoreCheminActuel;
@@ -116,6 +118,7 @@ public class SpawnController : MonoBehaviour
     {
         _chemin.SetActive(true);
         _endChemin.SetActive(true);
+        _panelScoreGrue.SetActive(true);
 
     }
     void UpdateScoreValue(EventParam e)
@@ -128,6 +131,8 @@ public class SpawnController : MonoBehaviour
         EventScoreGrueUpdate _eventScoreGrueUpdate = (EventScoreGrueUpdate)e;
         _chemin.SetActive(false);
         _endChemin.SetActive(false);
+        _panelScoreGrue.SetActive(false);
+
         //save dans un json la variable score 
         EventManager.TriggerEvent("Savedata",new EventScoreGrueUpdate(_eventScoreGrueUpdate.Score));
     }
