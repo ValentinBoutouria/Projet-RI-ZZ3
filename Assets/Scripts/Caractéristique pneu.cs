@@ -34,4 +34,12 @@ public class Caractéristiquepneu : MonoBehaviour
             _lisibilité = false;
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag=="Sol")
+        {
+            Debug.Log("Test");
+            EventManager.TriggerEvent("Rebond");
+        }
+    }
 }

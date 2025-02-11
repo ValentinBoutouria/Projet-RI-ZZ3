@@ -16,6 +16,7 @@ TagManager:
   - Start
   - End
   - GrabGrue
+  - Sol
   layers:
   - Default
   - TransparentFX
