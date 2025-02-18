@@ -9,6 +9,7 @@ using System;
 
 public class SpawnController : MonoBehaviour
 {
+    [SerializeField] int partieEnCours;
     [SerializeField] private GameObject _prefabPneu;
     [SerializeField] private GameObject _parentPneu;
     [SerializeField] private GameObject _chemin;
@@ -27,6 +28,7 @@ public class SpawnController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        partieEnCours = 1;
         _pneuRestant = 10;
         UpdateTextBenne();
         _textPneuDetection.text = "Waiting";
@@ -55,9 +57,13 @@ public class SpawnController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_pneuRestant == 0)
+        if (_pneuRestant == 0 )
         {
-            EventManager.TriggerEvent("FinGamePneu");
+            if (partieEnCours == 1)
+            {
+                partieEnCours = 0;
+                EventManager.TriggerEvent("FinGamePneu");
+            }
         }
     }
     void FinGamePneu(EventParam e)

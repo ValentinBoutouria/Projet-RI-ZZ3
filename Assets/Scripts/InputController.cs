@@ -88,6 +88,7 @@ public class InputController : MonoBehaviour
     }
     void EnvoieChronos(EventParam e)
     {
+        Debug.Log("Test");
         EventManager.TriggerEvent("UpdateChronos",new EventEnvoieChronos(chronos));
         _canvasOverlay.SetActive(false);
 
