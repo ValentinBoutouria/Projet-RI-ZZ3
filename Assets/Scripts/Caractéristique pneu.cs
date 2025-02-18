@@ -21,7 +21,7 @@ public class Caractéristiquepneu : MonoBehaviour
     void GenerationAleaPneuCorrect()
     {
         _pneuCorrect = true;
-        if(Random.Range(0, 1)==1)
+        if(Random.Range(0, 50) >= 25)
         {
             _pneuCorrect=false;
         }
@@ -29,9 +29,17 @@ public class Caractéristiquepneu : MonoBehaviour
     void GenerationAleaLisibilité()
     {
         _lisibilité = true;
-        if (Random.Range(0, 1) == 1)
+        if (Random.Range(0, 50) >= 25)
         {
             _lisibilité = false;
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag=="Sol")
+        {
+            Debug.Log("Test");
+            EventManager.TriggerEvent("Rebond");
         }
     }
 }

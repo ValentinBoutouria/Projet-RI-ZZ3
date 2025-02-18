@@ -11,6 +11,7 @@ public class InputController : MonoBehaviour
     [SerializeField] private Vector2 _previousValuePrimaryAxis;
     [SerializeField] private Vector2 _currentValuePrimaryAxis;
     [SerializeField] private float _speed; 
+    [SerializeField] private bool _chronosActive;
     [SerializeField] private float chronos;
     [SerializeField] private TextMeshProUGUI _textChronos;
     [SerializeField] private GameObject _canvasOverlay;
@@ -19,9 +20,10 @@ public class InputController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        chronos = 0;
+        chronos = 0; _chronosActive = false;
         EventManager.StartListening("BoutonVertTriggered", ActiveCanvas);
         EventManager.StartListening("BoutonRougeTriggered", DesactiveCanvas);
+        EventManager.StartListening("FinGamePneu", EnvoieChronos);
     }
 
     // Update is called once per frame
@@ -84,4 +86,12 @@ public class InputController : MonoBehaviour
         chronos += Time.deltaTime;
         _textChronos.text="Temps : "+chronos;
     }
+    void EnvoieChronos(EventParam e)
+    {
+        EventManager.TriggerEvent("UpdateChronos",new EventEnvoieChronos(chronos));
+        _canvasOverlay.SetActive(false);
+
+    }
+
+
 }

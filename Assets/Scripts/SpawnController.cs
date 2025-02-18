@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
+//using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 public class SpawnController : MonoBehaviour
 {
@@ -9,27 +12,36 @@ public class SpawnController : MonoBehaviour
     [SerializeField] private GameObject _parentPneu;
     [SerializeField] private GameObject _chemin;
     [SerializeField] private GameObject _endChemin;
+    [SerializeField] private GameObject _endGame;
+    [SerializeField] private GameObject _midGame;
+    [SerializeField] private GameObject _panelScoreGrue;
+    
     [SerializeField] private TextMeshProUGUI _textPneuDetection;
     [SerializeField] private TextMeshProUGUI _textPneuBenne;
-    [SerializeField] private TextMeshProUGUI _textScoreChemin;
+    [SerializeField] private TextMeshProUGUI _textScoreCheminActuel;
+    [SerializeField] private TextMeshProUGUI _textScoreCheminHighScore;
+    [SerializeField] private Button _restartButton;
     [SerializeField] private int _pneuRestant; 
-    [SerializeField] private float _scoreChemin;
     // Start is called before the first frame update
     void Start()
     {
         _pneuRestant = 10;
         UpdateTextBenne();
         _textPneuDetection.text = "Waiting";
+        _restartButton.onClick.AddListener(NewGamePneu);
         EventManager.StartListening("PneuCorrect", PneuCorrect);
         EventManager.StartListening("PneuIncorrect", PneuIncorrect);
         EventManager.StartListening("PneuIllisible", PneuIllisible);
         EventManager.StartListening("PneuRetire", PneuRetire);
         EventManager.StartListening("PneuExitBenne", PneuExitBenne);
         EventManager.StartListening("PneuBonnePlace", PneuBonnePlace);
-
         EventManager.StartListening("StartChemin", StartChemin);
         EventManager.StartListening("UpdateScoreValue", UpdateScoreValue);
         EventManager.StartListening("EndChemin", EndChemin);
+        EventManager.StartListening("FinGamePneu", FinGamePneu);
+        EventManager.StartListening("LoadData", UpdateTextHighScores);
+        EventManager.StartListening("UserNameValide", UpdateUserPneu);
+        EventManager.StartListening("UpdateChronos", UpdateChronosPneu);
 
 
     }
@@ -38,7 +50,32 @@ public class SpawnController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (_pneuRestant == 0)
+        {
+            EventManager.TriggerEvent("FinGamePneu");
+        }
+    }
+    void FinGamePneu(EventParam e)
+    {
+        _midGame.SetActive(false);
+        _endGame.SetActive(true);
+
+        //affichage clavier + recupération du score et envoie dans le json + update le panel avec les données du json
+
+    }
+    void NewGamePneu()
+    {
+        _midGame.SetActive(true);
+        _endGame.SetActive(false);
+    }
+    public void DestroyPneu()
+    {
+       
+        int _numberchild=_parentPneu.transform.childCount;
+        for (int i = 0; i < _numberchild; i++)
+        {
+            Destroy(_parentPneu.transform.GetChild(i).gameObject);
+        }
     }
     public void SpawnPneu()
     {
@@ -81,16 +118,36 @@ public class SpawnController : MonoBehaviour
     {
         _chemin.SetActive(true);
         _endChemin.SetActive(true);
+        _panelScoreGrue.SetActive(true);
 
     }
     void UpdateScoreValue(EventParam e)
     {
-        _textScoreChemin.text = "Score Actuel : " + (int)_scoreChemin;
+        EventScoreGrueUpdate _eventScoreGrueUpdate = (EventScoreGrueUpdate)e;
+        _textScoreCheminActuel.text = "Score Actuel : " + (int)_eventScoreGrueUpdate.Score;
     }
     void EndChemin(EventParam e)
     {
+        EventScoreGrueUpdate _eventScoreGrueUpdate = (EventScoreGrueUpdate)e;
         _chemin.SetActive(false);
         _endChemin.SetActive(false);
+        _panelScoreGrue.SetActive(false);
+
         //save dans un json la variable score 
+        EventManager.TriggerEvent("Savedata",new EventScoreGrueUpdate(_eventScoreGrueUpdate.Score));
+    }
+    void UpdateTextHighScores(EventParam e)
+    {
+        EventScoreGrueLoad _eventScoreGrueLoad = (EventScoreGrueLoad)e;
+        _textScoreCheminHighScore.text = _eventScoreGrueLoad.User +" : " + (int)_eventScoreGrueLoad.Score;
+        
+    }
+    void UpdateUserPneu(EventParam e)
+    {
+        //on change le json 
+    }
+    void UpdateChronosPneu(EventParam e)
+    {
+        //on change le json
     }
 }

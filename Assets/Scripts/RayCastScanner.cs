@@ -11,8 +11,7 @@ public class RayCastScanner : MonoBehaviour
     void Start()
     {
         rayLength = 10;
-        layerMask = 0;
-        
+        layerMask = 0;        
     }
 
     // Update is called once per frame
@@ -30,24 +29,30 @@ public class RayCastScanner : MonoBehaviour
         // Tracer un rayon pour le débogage
         Debug.DrawRay(origin, direction * rayLength, Color.green);
 
-         
+        
         // Effectuer le Raycast
         if (Physics.Raycast(origin, direction, out RaycastHit hit, rayLength))
         {
-            // Récupérer un composant du GameObject touché (par exemple, un Rigidbody)
-            hitCarac = hit.collider.gameObject.GetComponent<Caractéristiquepneu>();
-            if(hitCarac._pneuCorrect)
+            if(hit.collider.gameObject.GetComponent<Caractéristiquepneu>()!=null)
             {
-                EventManager.TriggerEvent("PneuCorrect");
+
+                // Récupérer un composant du GameObject touché (par exemple, un Rigidbody)
+                hitCarac = hit.collider.gameObject.GetComponent<Caractéristiquepneu>();
+                if(hitCarac._pneuCorrect)
+                {
+                    EventManager.TriggerEvent("PneuCorrect");
+                    Debug.Log("test");
 
 
-            }
-            else
-            {
-                EventManager.TriggerEvent("PneuIncorrect");
+                }
+                else
+                {
+                    EventManager.TriggerEvent("PneuIncorrect");
 
+                }
             }
         }
+        
 
     }
 }

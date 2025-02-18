@@ -276,7 +276,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
             InputField.keyboardType = (TouchScreenKeyboardType)(int.MaxValue);
 
             // Keep keyboard deactivated until needed
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
         }
 
 
@@ -797,8 +797,8 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
             {
                 // Send text entered event and close the keyboard
                 OnTextSubmitted?.Invoke(this, EventArgs.Empty);
-
-                Close();
+                //Close();
+                EventManager.TriggerEvent("UserNameValide",new EventUserNameValide(InputField.text));
             }
             else
             {

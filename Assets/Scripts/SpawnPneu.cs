@@ -24,9 +24,13 @@ public class SpawnPneu : MonoBehaviour
         animator.SetTrigger("ButtonPressed");
         EventManager.TriggerEvent("BoutonVertTriggered");
         EventSpawnPneu _eventSpawnPneu=(EventSpawnPneu)e;
+        float y = 0;
         for (int i = 0; i < 10; i++)
         {
-            _eventSpawnPneu.ParentPneu= Instantiate(_eventSpawnPneu.Pneu);
+            y = y + (float)0.1;
+            Vector3 pos=new Vector3(0, y, 0);
+            GameObject temp=Instantiate(_eventSpawnPneu.Pneu,Vector3.zero,Quaternion.identity,_eventSpawnPneu.ParentPneu.transform);
+            temp.transform.localPosition = pos; 
         }
     }
 }
