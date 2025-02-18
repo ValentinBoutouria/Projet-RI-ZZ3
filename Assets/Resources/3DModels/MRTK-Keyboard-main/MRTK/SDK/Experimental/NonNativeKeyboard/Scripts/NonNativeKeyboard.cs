@@ -797,8 +797,8 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
             {
                 // Send text entered event and close the keyboard
                 OnTextSubmitted?.Invoke(this, EventArgs.Empty);
-                //Close();
                 EventManager.TriggerEvent("UserNameValide",new EventUserNameValide(InputField.text));
+                Close();
             }
             else
             {

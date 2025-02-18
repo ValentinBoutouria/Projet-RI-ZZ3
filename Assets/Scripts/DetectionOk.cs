@@ -26,6 +26,7 @@ public class DetectionOk : MonoBehaviour
             {
                 EventManager.TriggerEvent("PneuBonnePlace");
             }
+            Destroy(other.gameObject);
         }
     }
     private void OnTriggerExit(Collider other)

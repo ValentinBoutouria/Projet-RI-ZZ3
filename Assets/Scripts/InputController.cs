@@ -24,6 +24,8 @@ public class InputController : MonoBehaviour
         EventManager.StartListening("BoutonVertTriggered", ActiveCanvas);
         EventManager.StartListening("BoutonRougeTriggered", DesactiveCanvas);
         EventManager.StartListening("FinGamePneu", EnvoieChronos);
+        EventManager.StartListening("ResetChronos", ResetChrono);
+        
     }
 
     // Update is called once per frame
@@ -38,6 +40,10 @@ public class InputController : MonoBehaviour
         }
 
 
+    }
+    void ResetChrono(EventParam e)
+    {
+        chronos = 0;
     }
     void ValueUpdatePrimaryAxis()
     {

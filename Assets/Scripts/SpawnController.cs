@@ -10,6 +10,7 @@ using System;
 public class SpawnController : MonoBehaviour
 {
     [SerializeField] int partieEnCours;
+    [SerializeField] bool _pneuSpawn;
     [SerializeField] private GameObject _prefabPneu;
     [SerializeField] private GameObject _parentPneu;
     [SerializeField] private GameObject _chemin;
@@ -17,7 +18,8 @@ public class SpawnController : MonoBehaviour
     [SerializeField] private GameObject _endGame;
     [SerializeField] private GameObject _midGame;
     [SerializeField] private GameObject _panelScoreGrue;
-    
+    [SerializeField] private GameObject _zipette;
+
     [SerializeField] private TextMeshProUGUI _textPneuDetection;
     [SerializeField] private TextMeshProUGUI _textPneuBenne;
     [SerializeField] private TextMeshProUGUI _textScoreCheminActuel;
@@ -28,6 +30,7 @@ public class SpawnController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _pneuSpawn = false;
         partieEnCours = 1;
         _pneuRestant = 10;
         UpdateTextBenne();
@@ -74,10 +77,24 @@ public class SpawnController : MonoBehaviour
         //affichage clavier + recupération du score et envoie dans le json + update le panel avec les données du json
 
     }
-    void NewGamePneu()
+    public void NewGamePneu()
     {
+        EventManager.TriggerEvent("BoutonRougeTriggered");
+        partieEnCours = 1;
+
+        //detruit les pneux
+        DestroyPneu();
+        //replace la zipette
+        _zipette.transform.localPosition = Vector3.zero;
+        _zipette.transform.localRotation=Quaternion.identity;
+        //remet le nombre de pneu restant a 10
+        _pneuRestant = 10;
+        UpdateTextBenne();
+        //reset chronos
+        EventManager.TriggerEvent("ResetChronos");
         _midGame.SetActive(true);
         _endGame.SetActive(false);
+        _pneuSpawn=false;
     }
     public void DestroyPneu()
     {
@@ -90,7 +107,12 @@ public class SpawnController : MonoBehaviour
     }
     public void SpawnPneu()
     {
-        EventManager.TriggerEvent("SpawnPneu",new EventSpawnPneu(_prefabPneu,_parentPneu));    
+        if (_pneuSpawn==false)
+        {
+            EventManager.TriggerEvent("SpawnPneu", new EventSpawnPneu(_prefabPneu, _parentPneu));
+            _pneuSpawn=true;
+        }
+
     }
     void PneuCorrect(EventParam e)
     {
@@ -156,7 +178,7 @@ public class SpawnController : MonoBehaviour
 
             if (i < _eventScoreGrueLoad.topN.Count)
             {
-                affichage +=  _eventScoreGrueLoad.topN[i].user + " " + _eventScoreGrueLoad.topN[i].int1 +"\n";
+                affichage +=  _eventScoreGrueLoad.topN[i].user + ":" + _eventScoreGrueLoad.topN[i].int1 +"\n";
 
             }
         }
@@ -181,7 +203,7 @@ public class SpawnController : MonoBehaviour
         
             if (i < _eventScorePneuLoad.topN.Count)
             {
-                affichage += _eventScorePneuLoad.topN[i].user + " " + _eventScorePneuLoad.topN[i].score + "\n";
+                affichage += _eventScorePneuLoad.topN[i].user + ":" + _eventScorePneuLoad.topN[i].score + "\n";
                 
             }
         }
