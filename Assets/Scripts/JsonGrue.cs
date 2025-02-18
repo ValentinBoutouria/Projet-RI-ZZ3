@@ -1,16 +1,31 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using UnityEngine;
 
+[System.Serializable]
+public class Data
+{
+    public string user;
+    public int int1;
 
+}
+[System.Serializable]
+public class DataList
+{
+    public List<Data> dataList = new List<Data>();
+}
 
 public class JsonGrue : MonoBehaviour
 {
+    string username =""; 
     private void Start()
     {
         EventManager.StartListening("Savedata", SaveData);
+        EventManager.StartListening("UserNameValide", ChangeName);
         // Définir le chemin du fichier JSON
         filePath = Path.Combine(Application.persistentDataPath, "dataGrue.json");
         Debug.Log(filePath);
@@ -28,23 +43,20 @@ public class JsonGrue : MonoBehaviour
 
             Debug.Log("Fichier non trouvé, aucune donnée chargée.");
         }
-    }
-    // Chemin du fichier JSON
-    private string filePath;
-
-    // Classe qui contient les données à enregistrer
-    [System.Serializable]
-    public class Data
-    {
-        public string user;
-        public int int1;
         
     }
-    [System.Serializable]
-    public class DataList
+
+    private void ChangeName(EventParam param)
     {
-        public List<Data> dataList = new List<Data>();
+        EventUserNameValide _eventUserNameValide = (EventUserNameValide)param;
+        username = _eventUserNameValide.User;
     }
+
+    // Chemin du fichier JSON
+    private string filePath;
+    
+    // Classe qui contient les données à enregistrer
+   
     private DataList dataList = new DataList();  // Instance pour la liste de données // a gerer
 
 
@@ -57,33 +69,51 @@ public class JsonGrue : MonoBehaviour
         Debug.Log(_eventScoreGrueSave.Score);
         Data data = new Data
         {
-            user="test", //a changer ici
+            user=username, //a changer ici
             int1 = (int)_eventScoreGrueSave.Score
 
         };
 
         // Sérialiser l'objet Data en JSON en utilisant JsonUtility
-        string json = JsonUtility.ToJson(data, true); // 'true' pour un formatage avec indentation
-
+       // string json = JsonUtility.ToJson(data, true); // 'true' pour un formatage avec indentation
+        string jsonread = File.ReadAllText(filePath);
+        DataList _existingScore = JsonUtility.FromJson<DataList>(jsonread);
+        List<Data> list = _existingScore.dataList;
+        list.Add(data);
+        list = list.OrderByDescending(x=>x.int1).ToList();
+        _existingScore.dataList = list;
+        string jsonwrite = JsonUtility.ToJson(_existingScore, true);
         // Enregistrer le JSON dans un fichier
-        File.WriteAllText(filePath, json);
+        File.WriteAllText(filePath, jsonwrite);
 
         Debug.Log("Données enregistrées dans le fichier JSON !");
         LoadData();
     }
+    List<Data> getNBestScores(string filePath , int N)
+    {
+        string json = File.ReadAllText(filePath);
+        DataList existingScore = JsonUtility.FromJson<DataList>(json);
+        List<Data> list = existingScore.dataList;
+        List<Data>  topN = new List<Data>();
+      
+        for (int i = 0; i < N; i++)
+        {
+            if (i < list.Count)
+            {
+                topN.Add(list[i]);
+            }
+        }
 
+        return topN;
+    } 
     // Fonction pour charger des données depuis un fichier JSON
     public void LoadData()
     {
-        // Lire le fichier JSON
-        string json = File.ReadAllText(filePath);
+        List<Data> top10 = getNBestScores(filePath,10);
+       
 
-        // Désérialiser le JSON pour obtenir l'objet Data
-        Data data = JsonUtility.FromJson<Data>(json);
-        EventManager.TriggerEvent("LoadData",new EventScoreGrueLoad(data.user,data.int1));
-        // Afficher les données chargées
-        Debug.Log("Données chargées : ");
-        Debug.Log("int1: " + data.int1);
+        EventManager.TriggerEvent("LoadData",new EventScoreGrueLoad(top10));
+       
         
     }
     private void CreateDefaultJsonFile()

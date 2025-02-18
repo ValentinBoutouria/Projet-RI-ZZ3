@@ -138,6 +138,20 @@ public class EventScoreGrueUpdate : EventParam
 
     public float Score { get => _score; set => _score = value; }
 }
+public class EventScorePneuSave : EventParam
+{
+    private float _score;
+
+
+
+    public EventScorePneuSave(float Score)
+    {
+        this._score = Score;
+
+    }
+
+    public float Score { get => _score; set => _score = value; }
+}
 public class EventScoreGrueSave : EventParam
 {
     private float _score;
@@ -154,20 +168,29 @@ public class EventScoreGrueSave : EventParam
 }
 public class EventScoreGrueLoad : EventParam
 {
-    private string _user;
-    private float _score;
+
+    public List<Data> topN;
 
 
-
-    public EventScoreGrueLoad(string User,float Score)
+    public EventScoreGrueLoad(List<Data> topN)
     {
-        this._user = User;
-        this._score = Score;
+        this.topN = topN;
 
     }
 
-    public float Score { get => _score; set => _score = value; }
-    public string User { get => _user; set => _user = value; }
+}
+public class EventScorePneuLoad : EventParam
+{
+
+    public List<DataPneu> topN;
+
+
+    public EventScorePneuLoad(List<DataPneu> topN)
+    {
+        this.topN = topN;
+
+    }
+
 }
 public class EventUserNameValide : EventParam
 {

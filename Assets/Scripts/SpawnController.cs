@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 //using UnityEngine.UIElements;
 using Unity.VisualScripting;
+using System;
 
 public class SpawnController : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class SpawnController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _textPneuBenne;
     [SerializeField] private TextMeshProUGUI _textScoreCheminActuel;
     [SerializeField] private TextMeshProUGUI _textScoreCheminHighScore;
+    [SerializeField] private TextMeshProUGUI _textScoreCheminHighScorePneu;
     [SerializeField] private Button _restartButton;
     [SerializeField] private int _pneuRestant; 
     // Start is called before the first frame update
@@ -42,10 +44,13 @@ public class SpawnController : MonoBehaviour
         EventManager.StartListening("LoadData", UpdateTextHighScores);
         EventManager.StartListening("UserNameValide", UpdateUserPneu);
         EventManager.StartListening("UpdateChronos", UpdateChronosPneu);
+        EventManager.StartListening("LoadDataPneu", UpdateTextHighScoresPneu);
 
 
     }
-    
+
+   
+
 
     // Update is called once per frame
     void Update()
@@ -139,7 +144,18 @@ public class SpawnController : MonoBehaviour
     void UpdateTextHighScores(EventParam e)
     {
         EventScoreGrueLoad _eventScoreGrueLoad = (EventScoreGrueLoad)e;
-        _textScoreCheminHighScore.text = _eventScoreGrueLoad.User +" : " + (int)_eventScoreGrueLoad.Score;
+        string affichage  = "";
+        for (int i = 0; i < 10; i++)
+        {
+
+            if (i < _eventScoreGrueLoad.topN.Count)
+            {
+                affichage +=  _eventScoreGrueLoad.topN[i].user + " " + _eventScoreGrueLoad.topN[i].int1 +"\n";
+
+            }
+        }
+
+        _textScoreCheminHighScore.text = affichage;
         
     }
     void UpdateUserPneu(EventParam e)
@@ -149,5 +165,22 @@ public class SpawnController : MonoBehaviour
     void UpdateChronosPneu(EventParam e)
     {
         //on change le json
+    }
+    private void UpdateTextHighScoresPneu(EventParam param)
+    {
+        EventScorePneuLoad _eventScorePneuLoad = (EventScorePneuLoad)param;
+        string affichage = "";
+        for (int i = 0; i < 10; i++)
+        {
+        
+            if (i < _eventScorePneuLoad.topN.Count)
+            {
+                affichage += _eventScorePneuLoad.topN[i].user + " " + _eventScorePneuLoad.topN[i].score + "\n";
+                
+            }
+        }
+       
+        _textScoreCheminHighScorePneu.text = affichage;
+
     }
 }
